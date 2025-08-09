@@ -1,2 +1,2 @@
-# sistema_rh_ms
+# sistema-rh-ms
 Sistema de RH - Micro serviços
