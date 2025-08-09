@@ -9,6 +9,7 @@ import com.rh.employee.user.dto.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,7 +19,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final WorkScheduleRepository workScheduleRepository;
     private final UserApiClient userApiClient;
 
-
     public EmployeeServiceImpl(EmployeeRepository employeeRepository, WorkScheduleRepository workScheduleRepository, UserApiClient userApiClient) {
         this.employeeRepository = employeeRepository;
         this.workScheduleRepository = workScheduleRepository;
@@ -27,49 +27,48 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeEntity adimit(EmployeeRequest request) {
-        try {
-            // 1. Valida dados únicos
-            validateUniqueFields(request);
+        EmployeeEntity employee = newEmployee(request);
+        employee = internalSave(employee);
 
-            // 2. Cria colaborador
-            EmployeeEntity employee = EmployeeEntity.builder()
-                    .name(request.name())
-                    .cpf(request.cpf())
-                    .email(request.email())
-                    .birthDate(request.birthDate())
-                    .admissionDate(request.admissionDate())
-                    .salary(request.salary())
-                    .workSchedule(workScheduleRepository.findById(request.workScheduleId()).orElse(null))
-                    .build();
+        createUser(request, employee);
 
-            EmployeeEntity savedEmployee = employeeRepository.save(employee);
-
-            // 3. Cria usuário via API interna
-            UserRequest userRequest = new UserRequest(savedEmployee.getId(), savedEmployee.getCpf(), request.password(), request.role());
-
-            ResponseEntity<Void> userResponse = userApiClient.createUser(userRequest);
-
-            return savedEmployee;
-
-        } catch (Exception e) {
-            throw e;
-            // Rollback automático por @Transactional
-           // throw new EmployeeRegistrationException("Falha ao registrar colaborador", e);
-        }
+        return employee;
     }
 
-    private void validateUniqueFields(EmployeeRequest request)  {
-        if (employeeRepository.existsByCpf(request.cpf())) {
+    private EmployeeEntity newEmployee(EmployeeRequest request) {
+        EmployeeEntity employee = new EmployeeEntity();
+        employee.setName(request.name());
+        employee.setCpf(request.cpf());
+        employee.setEmail(request.email());
+        employee.setBirthDate(request.birthDate());
+        employee.setAdmissionDate(LocalDate.now());
+        employee.setSalary(request.salary());
+        employee.setWorkSchedule(workScheduleRepository.findById(request.workScheduleId()).orElse(null));
+        return employee;
+    }
+
+    private void createUser(EmployeeRequest request, EmployeeEntity employee) {
+        UserRequest userRequest = new UserRequest(employee.getId(), employee.getCpf(), request.password(), request.role());
+        ResponseEntity<Void> userResponse = userApiClient.createUser(userRequest);
+    }
+
+    private EmployeeEntity internalSave(EmployeeEntity employee) {
+        validaUniqueFields(employee);
+        return employeeRepository.save(employee);
+    }
+
+    private void validaUniqueFields(EmployeeEntity employee) {
+        if (employeeRepository.existsByCpf(employee.getCpf())) {
             throw new RuntimeException("CPF já cadastrado");
         }
-        if (employeeRepository.existsByEmail(request.email())) {
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
             throw new RuntimeException("Email já cadastrado");
         }
     }
 
     @Override
     public List<EmployeeEntity> findAll() {
-        return List.of();
+        return employeeRepository.findAll();
     }
 
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
-@Builder
 @Entity
 @Table(name = "TB_COLLABORATOR")
 public class EmployeeEntity {
