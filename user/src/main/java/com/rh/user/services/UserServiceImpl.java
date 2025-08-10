@@ -30,10 +30,15 @@ public class UserServiceImpl implements UserService {
         user.setEmployeeId(userRequest.employeeId());
         user.setRole(userRequest.role());
 
-        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-        user.setPassword(bcrypt.encode(userRequest.password()));
+        String passwordEncoded = encodePassword(userRequest.password());
+        user.setPassword(passwordEncoded);
 
         return internalSave(user);
+    }
+
+    private static String encodePassword(String password) {
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        return bcrypt.encode(password);
     }
 
     @Override
@@ -43,7 +48,7 @@ public class UserServiceImpl implements UserService {
         }
         var user = userRepository.findById(userRequest.id()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         user.setCpf(user.getCpf());
-        // Apenas atualiza a rola se informada
+        // Apenas atualiza a role foi informada
         if (userRequest.role() != null) {
             user.setRole(userRequest.role());
         }
