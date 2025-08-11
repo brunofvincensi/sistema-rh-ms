@@ -18,7 +18,7 @@ public class UserEntity {
     private UUID id;
 
     @NotNull
-    @Column(name = "employee_id", unique = true)
+    @Column(name = "employee_id", nullable = false, unique = true)
     private UUID employeeId;
 
     @CPF

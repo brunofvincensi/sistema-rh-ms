@@ -1,16 +1,21 @@
 package com.rh.employee.services;
 
+import com.rh.common.exceptions.BusinessException;
+import com.rh.common.exceptions.ResourceNotFoundException;
 import com.rh.employee.dtos.EmployeeRequest;
+import com.rh.employee.dtos.EmployeeResponse;
 import com.rh.employee.models.EmployeeEntity;
 import com.rh.employee.repositories.EmployeeRepository;
 import com.rh.employee.repositories.WorkScheduleRepository;
-import com.rh.employee.user.client.UserApiClient;
-import com.rh.employee.user.dto.UserRequest;
+import com.rh.employee.clients.user.UserApiClient;
+import com.rh.employee.clients.user.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -26,13 +31,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeEntity adimit(EmployeeRequest request) {
+    @Transactional(rollbackFor = Throwable.class)
+    public void adimit(EmployeeRequest request) {
         EmployeeEntity employee = newEmployee(request);
         employee = internalSave(employee);
 
         createUser(request, employee);
+    }
 
-        return employee;
+    @Override
+    public EmployeeResponse findById(UUID employeeId) {
+        EmployeeEntity employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado"));
+        return new EmployeeResponse(); // TODO
+    }
+
+    @Override
+    public List<EmployeeResponse> findAll() {
+        return employeeRepository.findAll();
     }
 
     private EmployeeEntity newEmployee(EmployeeRequest request) {
@@ -50,6 +65,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private void createUser(EmployeeRequest request, EmployeeEntity employee) {
         UserRequest userRequest = new UserRequest(employee.getId(), employee.getCpf(), request.password(), request.role());
         ResponseEntity<Void> userResponse = userApiClient.createUser(userRequest);
+        if (!userResponse.getStatusCode().is2xxSuccessful()) {
+            // Lança uma exceção para dar rollback na transação
+            throw new BusinessException(
+                    "Falha ao criar usuário: " + userResponse.getStatusCode()
+            );
+        }
     }
 
     private EmployeeEntity internalSave(EmployeeEntity employee) {
@@ -59,16 +80,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private void validaUniqueFields(EmployeeEntity employee) {
         if (employeeRepository.existsByCpf(employee.getCpf())) {
-            throw new RuntimeException("CPF já cadastrado");
+            throw new BusinessException("CPF já cadastrado");
         }
         if (employeeRepository.existsByEmail(employee.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new BusinessException("Email já cadastrado");
         }
-    }
-
-    @Override
-    public List<EmployeeEntity> findAll() {
-        return employeeRepository.findAll();
     }
 
 }

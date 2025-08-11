@@ -1,13 +1,16 @@
 package com.rh.employee.services;
 
 import com.rh.employee.dtos.EmployeeRequest;
-import com.rh.employee.models.EmployeeEntity;
+import com.rh.employee.dtos.EmployeeResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface EmployeeService {
 
-    EmployeeEntity adimit(EmployeeRequest employeeRequest);
+    void adimit(EmployeeRequest employeeRequest);
 
-    List<EmployeeEntity> findAll();
+    EmployeeResponse findById(UUID employeeId);
+
+    List<EmployeeResponse> findAll();
 }

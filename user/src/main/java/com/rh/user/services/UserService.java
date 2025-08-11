@@ -1,13 +1,17 @@
 package com.rh.user.services;
 
 import com.rh.user.dtos.UserRequest;
+import com.rh.user.dtos.UserResponse;
 import com.rh.user.dtos.UserUpdateRequest;
-import com.rh.user.models.UserEntity;
+
+import java.util.UUID;
 
 public interface UserService {
 
-    UserEntity create(UserRequest userRequest);
+    void create(UserRequest userRequest);
 
-    UserEntity update(UserUpdateRequest userRequest);
+    void update(UserUpdateRequest userRequest);
+
+    UserResponse findById(UUID userId);
 
 }

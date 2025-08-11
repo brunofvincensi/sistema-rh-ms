@@ -1,16 +1,16 @@
 package com.rh.user.controllers;
 
 import com.rh.user.dtos.UserRequest;
+import com.rh.user.dtos.UserResponse;
 import com.rh.user.dtos.UserUpdateRequest;
 import com.rh.user.models.UserEntity;
 import com.rh.user.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController("/users")
 public class UserController {
@@ -21,16 +21,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid UserRequest userRequest) {
         UserEntity user = userService.create(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user.getCpf());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/users")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") UUID userId) {
+        UserResponse userResponse = userService.findById(userId);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @PutMapping
     public ResponseEntity<?> update(@RequestBody @Valid UserUpdateRequest userRequest) {
         UserEntity user = userService.update(userRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(user.getCpf());
+        return ResponseEntity.ok(user.getCpf());
     }
 
 }
