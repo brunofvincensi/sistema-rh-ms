@@ -1,4 +1,4 @@
-package com.ms.email.dtos;
+package com.rh.email.dtos;
 
 import java.util.UUID;
 

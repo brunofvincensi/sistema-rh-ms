@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController("/users")
+@RestController("/payrolls")
 public class PayrollController {
 
     private final PayrollRecordService payrollService;

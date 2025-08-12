@@ -5,6 +5,7 @@ import com.rh.time_clock.domain.enums.TimeEntryType;
 import com.rh.time_clock.dtos.TimeEntryRequest;
 import com.rh.time_clock.domain.models.TimeEntryEntity;
 import com.rh.time_clock.dtos.TimeEntryResponse;
+import com.rh.time_clock.dtos.TimeEntryUpdateRequest;
 import com.rh.time_clock.repositories.TimeEntryRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +46,17 @@ public class TimeEntryServiceImpl implements TimeEntryService {
     }
 
     @Override
+    public void updateRecord(TimeEntryEntity timeEntry, TimeEntryUpdateRequest request) {
+        timeEntry.setDate(request.date());
+        timeEntry.setTime(request.time());
+        timeEntry.setObservation(request.observation());
+        timeEntryRepository.save(timeEntry);
+    }
+
+    @Override
     public List<TimeEntryResponse> findByEmployeeAndDate(UUID employeeId, LocalDate date) {
         return timeEntryRepository
-                .findEmployeeIdAndByDate(employeeId, date)
+                .findByEmployeeIdAndDate(employeeId, date)
                 .stream()
                 .map(TimeEntryResponse::new)
                 .collect(Collectors.toList());
@@ -61,7 +70,7 @@ public class TimeEntryServiceImpl implements TimeEntryService {
         LocalDate startMonth = yearMonth.atDay(1);
         LocalDate endMonth = yearMonth.atEndOfMonth();
 
-        return timeEntryRepository.findByDataBetween(startMonth, endMonth)
+        return timeEntryRepository.findByDateBetween(startMonth, endMonth)
                 .stream()
                 .map(TimeEntryResponse::new)
                 .collect(Collectors.toList());

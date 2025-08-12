@@ -37,7 +37,7 @@ public class EmployeeEntity {
     private LocalDate birthDate;
 
     @NotNull
-    @Column(name = "dt_birth_date", nullable = false)
+    @Column(name = "dt_admission_date", nullable = false)
     private LocalDate admissionDate;
 
     @NotNull

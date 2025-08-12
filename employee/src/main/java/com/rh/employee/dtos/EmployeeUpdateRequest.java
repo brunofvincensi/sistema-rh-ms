@@ -14,7 +14,6 @@ public record EmployeeUpdateRequest(@NotNull UUID id,
                                     @NotBlank @CPF String cpf,
                                     @NotBlank @Email String email,
                                     @NotNull LocalDate birthDate,
-                                    @NotNull LocalDate admissionDate,
                                     @NotNull BigDecimal salary,
                                     @NotNull UUID workScheduleId,
                                     @NotBlank String role) {

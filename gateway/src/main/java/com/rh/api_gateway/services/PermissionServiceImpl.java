@@ -19,6 +19,7 @@ public class PermissionServiceImpl implements PermissionService {
     private WebClient.Builder webClientBuilder;
 
     private static final String CACHE_PREFIX = "user_permission:";
+    // Timeout do cache
     private static final Duration CACHE_TTL = Duration.ofMinutes(30);
 
     @Override
@@ -44,10 +45,10 @@ public class PermissionServiceImpl implements PermissionService {
     private Mono<UserInfo> findUserPermission(String userId) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8081/users/" + userId)
+                .uri("http://api/user/users/" + userId)
                 .retrieve()
                 .bodyToMono(UserInfo.class)
-                .onErrorReturn(new UserInfo()); // Retorna vazio se não encontrar
+                .onErrorReturn(new UserInfo());
     }
 
     @Override

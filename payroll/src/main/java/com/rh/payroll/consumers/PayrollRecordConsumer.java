@@ -34,10 +34,10 @@ public class PayrollRecordConsumer {
         try {
             PayrollExecutor executor = payrollExecutorFactory.getInstance(payrollRecord.getMonth(), payrollRecord.getYear());
 
-            DetailedCalculation calculoDetalhado = executor.execute(payrollRecord.getEmployeeId());
+            DetailedCalculation detailedCalculation = executor.execute(payrollRecord.getEmployeeId());
 
-            payrollRecord.setBaseSalary(calculoDetalhado.getBaseSalary());
-            payrollRecord.setConsolidatedSalary(calculoDetalhado.getConsolidatedSalary());
+            payrollRecord.setBaseSalary(detailedCalculation.getBaseSalary());
+            payrollRecord.setConsolidatedSalary(detailedCalculation.getConsolidatedSalary());
             payrollRecord.setStatus(PayrollRecordStatus.COMPLETED);
         } catch (Exception e) {
             payrollRecord.setErrorMessage(e.getMessage());

@@ -48,11 +48,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserUpdateRequest userRequest) {
-        if (userRequest == null || userRequest.id() == null) {
+    public void update(UUID userId, UserUpdateRequest userRequest) {
+        if (userRequest == null || userId == null) {
             return;
         }
-        var user = userRepository.findById(userRequest.id()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        var user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        updateUser(userRequest, user);
+    }
+
+
+    @Override
+    public void updateByEmployeeId(UUID employeeId, UserUpdateRequest userRequest) {
+        if (userRequest == null || employeeId == null) {
+            return;
+        }
+        UserEntity user = userRepository.findByEmployeeId(employeeId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        updateUser(userRequest, user);
+    }
+
+    private void updateUser(UserUpdateRequest userRequest, UserEntity user) {
         user.setCpf(userRequest.cpf());
         // Apenas atualiza a role foi informada
         if (userRequest.role() != null) {

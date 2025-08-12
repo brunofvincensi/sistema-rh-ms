@@ -71,7 +71,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<!-- Dependência para o módulo de erro -->
 		<dependency>
 			<groupId>com.rh</groupId>
 			<artifactId>common</artifactId>

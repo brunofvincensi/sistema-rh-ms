@@ -1,7 +1,6 @@
-package com.ms.email.configs;
+package com.rh.api_gateway.config.rabbitMQ;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.AMQP;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${broker.queue.email.name}")
+    @Value("${broker.queue.user-update.name}")
     private String queue;
 
     @Bean

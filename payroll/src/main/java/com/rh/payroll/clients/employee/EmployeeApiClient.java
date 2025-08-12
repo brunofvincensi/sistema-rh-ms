@@ -5,13 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(
-        name = "employee",
-        url = "${employee.api.url}"
-)
+@FeignClient(name = "employee-service")
 public interface EmployeeApiClient {
 
     @GetMapping("/employees/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") String employeeId);
+    ResponseEntity<?> findById(@PathVariable("id") String employeeId);
 
 }

@@ -12,11 +12,13 @@ public class WorkScheduleResponse {
     private UUID id;
     private BigDecimal hours;
     private Integer days;
+    private String name;
 
     public WorkScheduleResponse(WorkScheduleEntity workSchedule) {
         this.id = workSchedule.getId();
         this.hours = workSchedule.getHours();
         this.days = workSchedule.getDays();
+        this.name = workSchedule.getName();
     }
 
 }

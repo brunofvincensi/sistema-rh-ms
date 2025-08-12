@@ -14,8 +14,8 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntryEntity, UUID
 
     Optional<TimeEntryEntity> findFirstByEmployeeIdAndDateOrderByTimeDesc(UUID employeeId, LocalDate date);
 
-    List<TimeEntryEntity> findEmployeeIdAndByDate(UUID employeeId, LocalDate date);
+    List<TimeEntryEntity> findByEmployeeIdAndDate(UUID employeeId, LocalDate date);
 
-    List<TimeEntryEntity> findByDataBetween(LocalDate inicioMes, LocalDate fimMes);
+    List<TimeEntryEntity> findByDateBetween(LocalDate inicioMes, LocalDate fimMes);
 
 }

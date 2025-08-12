@@ -1,9 +1,11 @@
-package com.ms.email;
+package com.rh.email;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class EmailApplication {
 
 	public static void main(String[] args) {

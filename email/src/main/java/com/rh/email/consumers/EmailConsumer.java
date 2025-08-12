@@ -1,7 +1,7 @@
-package com.ms.email.consumers;
+package com.rh.email.consumers;
 
-import com.ms.email.dtos.EmailRecordDto;
-import com.ms.email.services.EmailService;
+import com.rh.email.dtos.EmailRecordDto;
+import com.rh.email.services.EmailService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;

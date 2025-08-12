@@ -1,6 +1,5 @@
-package com.ms.email.services;
+package com.rh.email.services;
 
-import com.ms.email.dtos.EmailRecordDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,7 +17,7 @@ public class EmailService {
     @Value(value = "${spring.mail.username}")
     private String emailFrom;
 
-    public void sendEmail(EmailRecordDto emailModel) {
+    public void sendEmail(com.rh.email.dtos.EmailRecordDto emailModel) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailModel.emailTo());
         message.setSubject(emailModel.subject());

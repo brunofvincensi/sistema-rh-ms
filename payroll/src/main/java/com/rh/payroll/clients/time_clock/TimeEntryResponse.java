@@ -1,6 +1,5 @@
 package com.rh.payroll.clients.time_clock;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;

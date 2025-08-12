@@ -21,21 +21,27 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity<Void> create(@RequestBody @Valid UserRequest userRequest) {
         userService.create(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") UUID userId) {
-        UserResponse userResponse = userService.findById(userId);
-        return ResponseEntity.ok(userResponse);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") String userId, @RequestBody @Valid UserUpdateRequest userRequest) {
+        userService.update(UUID.fromString(userId), userRequest);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping
-    public ResponseEntity<?> update(@RequestBody @Valid UserUpdateRequest userRequest) {
-        userService.update(userRequest);
+    @PutMapping("/employee/{id}")
+    public ResponseEntity<Void> updateByIdEmployee(@PathVariable("id") String employeeId, @RequestBody @Valid UserUpdateRequest userRequest) {
+        userService.updateByEmployeeId(UUID.fromString(employeeId), userRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") String userId) {
+        UserResponse userResponse = userService.findById(UUID.fromString(userId));
+        return ResponseEntity.ok(userResponse);
     }
 
 }

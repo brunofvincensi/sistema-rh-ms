@@ -7,14 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(
-        name = "time-clock",
-        url = "${time-clock.api.url}"
-)
+@FeignClient(name = "time-clock-service")
 public interface TimeClockApiClient {
 
     @GetMapping("/time-entries")
-    public ResponseEntity<?> findTimeEntriesByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
+    ResponseEntity<?> findTimeEntriesByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
                                                            @RequestParam @NotNull Integer month,
                                                            @RequestParam @NotNull Integer year);
 
