@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class PermissionCacheInvalidator {
 
-    private final PermissionService permissaoService;
+    private final PermissionService permissionService;
 
-    public PermissionCacheInvalidator(PermissionService permissaoService) {
-        this.permissaoService = permissaoService;
+    public PermissionCacheInvalidator(PermissionService permissionService) {
+        this.permissionService = permissionService;
     }
 
     @RabbitListener(queues = "${broker.queue.user-update.name}")
     public void invalidateCache(String userId) {
-        permissaoService.invalidateCache(userId);
+        permissionService.invalidateCache(userId);
     }
 
 }

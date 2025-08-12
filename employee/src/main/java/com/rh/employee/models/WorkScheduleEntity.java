@@ -2,10 +2,12 @@ package com.rh.employee.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "TB_WORK_SCHEDULE")
 public class WorkScheduleEntity {

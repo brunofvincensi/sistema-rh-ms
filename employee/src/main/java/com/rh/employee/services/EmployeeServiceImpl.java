@@ -42,12 +42,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse findById(UUID employeeId) {
         EmployeeEntity employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado"));
-        return new EmployeeResponse(); // TODO
+        return new EmployeeResponse(employee);
     }
 
     @Override
     public List<EmployeeResponse> findAll() {
-        return employeeRepository.findAll();
+        return employeeRepository.findAll().stream().map(EmployeeResponse::new).toList();
     }
 
     private EmployeeEntity newEmployee(EmployeeRequest request) {

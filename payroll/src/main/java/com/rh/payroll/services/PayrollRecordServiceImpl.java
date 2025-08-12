@@ -6,6 +6,7 @@ import com.rh.payroll.domain.enums.PayrollRecordStatus;
 import com.rh.payroll.domain.models.PayrollRecordEntity;
 import com.rh.payroll.dtos.PayrollRecordInfoResponse;
 import com.rh.payroll.dtos.PayrollRecordRequest;
+import com.rh.payroll.dtos.PayrollResponse;
 import com.rh.payroll.producers.PayrollRecordProducer;
 import com.rh.payroll.repositories.PayrollRecordRepository;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PayrollServiceImpl implements PayrollService {
+public class PayrollRecordServiceImpl implements PayrollRecordService {
 
     private final PayrollRecordRepository payrollRecordRepository;
     private final PayrollRecordProducer payrollRecordProducer;
 
-    public PayrollServiceImpl(PayrollRecordRepository payrollRecordRepository, PayrollRecordProducer payrollRecordProducer) {
+    public PayrollRecordServiceImpl(PayrollRecordRepository payrollRecordRepository, PayrollRecordProducer payrollRecordProducer) {
         this.payrollRecordRepository = payrollRecordRepository;
         this.payrollRecordProducer = payrollRecordProducer;
     }
@@ -32,7 +33,7 @@ public class PayrollServiceImpl implements PayrollService {
             return null;
         }
 
-        Optional<PayrollRecordEntity> payrollRecord = payrollRecordRepository.findByEmployeeIdAndReferenceMonthAndReferenceYearAndStatusIn(
+        Optional<PayrollRecordEntity> payrollRecord = payrollRecordRepository.findByEmployeeIdAndMonthAndYearAndStatusIn(
                 payrollRecordRequest.employeeId(),
                 payrollRecordRequest.month(),
                 payrollRecordRequest.year(),
@@ -69,6 +70,23 @@ public class PayrollServiceImpl implements PayrollService {
     public PayrollRecordInfoResponse findById(UUID userId) {
         PayrollRecordEntity entity = payrollRecordRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Folha de pagamento não encontrada"));
         return new PayrollRecordInfoResponse(entity);
+    }
+
+    @Override
+    public List<PayrollRecordInfoResponse> findAll() {
+        return payrollRecordRepository.findAll().stream().map(PayrollRecordInfoResponse::new).toList();
+    }
+
+    @Override
+    public PayrollResponse findPayrollResult(UUID employeeId, Integer month, Integer year) {
+        PayrollRecordEntity entity = payrollRecordRepository.findByEmployeeIdAndMonthAndYearAndStatusIn(employeeId, month, year, List.of(PayrollRecordStatus.COMPLETED))
+                .orElseThrow(() -> new ResourceNotFoundException("Folha de pagamento não processada"));
+
+        PayrollResponse response = new PayrollResponse();
+        response.setBaseSalary(entity.getBaseSalary());
+        response.setConsolidatedSalary(entity.getConsolidatedSalary());
+
+        return response;
     }
 
 }

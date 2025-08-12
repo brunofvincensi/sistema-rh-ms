@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -44,5 +45,11 @@ public class PayrollRecordEntity {
 
     @Column(name = "ds_error_message", nullable = true)
     private String errorMessage;
+
+    @Column(name = "vl_consolidated_salary", nullable = true)
+    private BigDecimal consolidatedSalary;
+
+    @Column(name = "vl_base_salary", nullable = true)
+    private BigDecimal baseSalary;
 
 }

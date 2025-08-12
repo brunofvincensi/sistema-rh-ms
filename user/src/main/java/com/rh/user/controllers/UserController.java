@@ -3,7 +3,6 @@ package com.rh.user.controllers;
 import com.rh.user.dtos.UserRequest;
 import com.rh.user.dtos.UserResponse;
 import com.rh.user.dtos.UserUpdateRequest;
-import com.rh.user.models.UserEntity;
 import com.rh.user.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid UserRequest userRequest) {
-        UserEntity user = userService.create(userRequest);
+        userService.create(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -35,8 +34,8 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody @Valid UserUpdateRequest userRequest) {
-        UserEntity user = userService.update(userRequest);
-        return ResponseEntity.ok(user.getCpf());
+        userService.update(userRequest);
+        return ResponseEntity.ok().build();
     }
 
 }

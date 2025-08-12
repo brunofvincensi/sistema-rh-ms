@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface PayrollRecordRepository extends JpaRepository<PayrollRecordEntity, UUID>  {
 
-    Optional<PayrollRecordEntity> findByEmployeeIdAndReferenceMonthAndReferenceYearAndStatusIn(
+    Optional<PayrollRecordEntity> findByEmployeeIdAndMonthAndYearAndStatusIn(
             UUID employeeId,
             Integer referenceMonth,
             Integer referenceYear,

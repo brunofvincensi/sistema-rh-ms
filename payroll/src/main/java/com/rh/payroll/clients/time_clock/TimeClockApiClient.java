@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
         name = "time-clock",
         url = "${time-clock.api.url}"
 )
-public interface TimeClockApiCliente {
+public interface TimeClockApiClient {
 
     @GetMapping("/time-entries")
     public ResponseEntity<?> findTimeEntriesByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,

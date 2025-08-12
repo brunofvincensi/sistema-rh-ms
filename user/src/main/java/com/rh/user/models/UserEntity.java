@@ -31,6 +31,6 @@ public class UserEntity {
 
     @NotBlank
     @Column(name = "ds_role", nullable = false)
-    private String role = RoleConstants.COLABORADOR;
+    private String role;
 
 }

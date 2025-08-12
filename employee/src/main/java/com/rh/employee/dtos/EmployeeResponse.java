@@ -1,5 +1,6 @@
 package com.rh.employee.dtos;
 
+import com.rh.employee.models.EmployeeEntity;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,4 +19,14 @@ public class EmployeeResponse {
     private BigDecimal salary;
     private WorkScheduleResponse workSchedule;
 
+    public EmployeeResponse(EmployeeEntity employee) {
+        this.id = employee.getId();
+        this.name = employee.getName();
+        this.cpf = employee.getCpf();
+        this.email = employee.getEmail();
+        this.birthDate = employee.getBirthDate();
+        this.admissionDate = employee.getAdmissionDate();
+        this.salary = employee.getSalary();
+        this.workSchedule = new WorkScheduleResponse(employee.getWorkSchedule());
+    }
 }

@@ -2,10 +2,10 @@ package com.rh.user.services;
 
 import com.rh.common.exceptions.BusinessException;
 import com.rh.common.exceptions.ResourceNotFoundException;
+import com.rh.common.users.RoleConstants;
 import com.rh.user.dtos.UserRequest;
 import com.rh.user.dtos.UserResponse;
 import com.rh.user.dtos.UserUpdateRequest;
-import com.rh.user.models.RoleConstants;
 import com.rh.user.models.UserEntity;
 import com.rh.user.producers.UserUpdateProducer;
 import com.rh.user.repositories.UserRepository;

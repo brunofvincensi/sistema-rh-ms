@@ -1,6 +1,7 @@
 package com.rh.api_gateway.config;
 
 import com.rh.api_gateway.services.PermissionService;
+import com.rh.common.HeaderConstants;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +33,7 @@ public class AuthenticationFilter implements WebFilter {
         }
 
         // Simular header de usuário conforme especificação
-        String usuarioHeader = exchange.getRequest().getHeaders().getFirst("X-Usuario-Id");
+        String usuarioHeader = exchange.getRequest().getHeaders().getFirst(HeaderConstants.USER_ID);
 
         if (usuarioHeader == null || usuarioHeader.trim().isEmpty()) {
             exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
@@ -50,9 +51,9 @@ public class AuthenticationFilter implements WebFilter {
                     // Adicionar dados do usuário no header para os microserviços
                     ServerWebExchange mutatedExchange = exchange.mutate()
                             .request(originalRequest -> originalRequest
-                                    .header("X-Usuario-Id", userInfo.getId().toString())
-                                    .header("X-Usuario-Role", userInfo.getRole())
-                                    .header("X-Colaborador-Id", userInfo.getEmployeeId().toString())
+                                    .header(HeaderConstants.USER_ID, userInfo.getId().toString())
+                                    .header(HeaderConstants.USER_ROLE, userInfo.getRole())
+                                    .header(HeaderConstants.EMPLOYEE_ID, userInfo.getEmployeeId().toString())
                             )
                             .build();
 

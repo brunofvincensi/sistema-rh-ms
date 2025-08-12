@@ -1,10 +1,14 @@
 package com.rh.payroll.controllers;
 
+import com.rh.common.HeaderConstants;
 import com.rh.payroll.dtos.PayrollRecordInfoResponse;
 import com.rh.payroll.dtos.PayrollRecordRequest;
 import com.rh.payroll.dtos.PayrollRecordResponse;
-import com.rh.payroll.services.PayrollService;
+import com.rh.payroll.dtos.PayrollResponse;
+import com.rh.payroll.services.PayrollRecordService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +17,12 @@ import java.util.UUID;
 @RestController("/users")
 public class PayrollController {
 
-    private final PayrollService payrollService;
+    private final PayrollRecordService payrollService;
+    private final HttpServletRequest httpServletRequest;
 
-    public PayrollController(PayrollService payrollService) {
+    public PayrollController(PayrollRecordService payrollService, HttpServletRequest httpServletRequest) {
         this.payrollService = payrollService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @PostMapping
@@ -31,10 +37,17 @@ public class PayrollController {
         return ResponseEntity.ok(infoResponse);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> findAllBy(@PathVariable("id") UUID payrollRecordId) {
-//        PayrollRecordInfoResponse infoResponse = payrollService.findById(payrollRecordId);
-//        return ResponseEntity.ok(infoResponse);
-//    }
+    @GetMapping("/me")
+    public ResponseEntity<?> findByMe(@RequestBody @NotNull Integer month,
+                                      @RequestBody @NotNull Integer year) {
+        String employeeIdHeader = httpServletRequest.getHeader(HeaderConstants.EMPLOYEE_ID);
+        PayrollResponse infoResponse = payrollService.findPayrollResult(UUID.fromString(employeeIdHeader), month, year);
+        return ResponseEntity.ok(infoResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(payrollService.findAll());
+    }
 
 }

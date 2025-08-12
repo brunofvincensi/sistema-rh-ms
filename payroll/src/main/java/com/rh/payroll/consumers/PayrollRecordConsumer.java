@@ -1,31 +1,27 @@
 package com.rh.payroll.consumers;
 
-import com.rh.payroll.clients.employee.EmployeeApiCliente;
-import com.rh.payroll.clients.employee.EmployeeResponse;
-import com.rh.payroll.clients.time_clock.TimeClockApiCliente;
-import com.rh.payroll.clients.time_clock.TimeEntryResponse;
 import com.rh.payroll.domain.enums.PayrollRecordStatus;
 import com.rh.payroll.domain.models.PayrollRecordEntity;
 import com.rh.payroll.repositories.PayrollRecordRepository;
+import com.rh.payroll.services.PayrollExecutorFactory;
+import com.rh.payroll.services.models.DetailedCalculation;
+import com.rh.payroll.services.PayrollExecutor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Component
 public class PayrollRecordConsumer {
 
     private final PayrollRecordRepository payrollRecordRepository;
-    private final TimeClockApiCliente timeClockApiCliente;
-    private final EmployeeApiCliente employeeApiCliente;
+    private final PayrollExecutorFactory payrollExecutorFactory;
 
-    public PayrollRecordConsumer(PayrollRecordRepository payrollRecordRepository, TimeClockApiCliente timeClockApiCliente, EmployeeApiCliente employeeApiCliente) {
+    public PayrollRecordConsumer(PayrollRecordRepository payrollRecordRepository, PayrollExecutorFactory payrollExecutorFactory) {
         this.payrollRecordRepository = payrollRecordRepository;
-        this.timeClockApiCliente = timeClockApiCliente;
-        this.employeeApiCliente = employeeApiCliente;
+        this.payrollExecutorFactory = payrollExecutorFactory;
     }
 
     @RabbitListener(queues = "${broker.queue.payroll-record.name}")
@@ -35,25 +31,20 @@ public class PayrollRecordConsumer {
             return;
         }
 
-        UUID employeeId = payrollRecord.getEmployeeId();
+        try {
+            PayrollExecutor executor = payrollExecutorFactory.getInstance(payrollRecord.getMonth(), payrollRecord.getYear());
 
-        ResponseEntity<?> timeEntriesResponse = timeClockApiCliente.findTimeEntriesByMonthAndYear(payrollRecord.getEmployeeId().toString(), payrollRecord.getMonth(), payrollRecord.getYear());
-        if (!timeEntriesResponse.getStatusCode().is2xxSuccessful()) {
-            payrollRecord.setErrorMessage("Erro ao buscar os registros de ponto");
+            DetailedCalculation calculoDetalhado = executor.execute(payrollRecord.getEmployeeId());
+
+            payrollRecord.setBaseSalary(calculoDetalhado.getBaseSalary());
+            payrollRecord.setConsolidatedSalary(calculoDetalhado.getConsolidatedSalary());
+            payrollRecord.setStatus(PayrollRecordStatus.COMPLETED);
+        } catch (Exception e) {
+            payrollRecord.setErrorMessage(e.getMessage());
             payrollRecord.setStatus(PayrollRecordStatus.FAILED);
+        } finally {
+            payrollRecord.setFinishedAt(LocalDate.now());
         }
-        List<TimeEntryResponse> timeEntries = (List<TimeEntryResponse>) timeEntriesResponse.getBody();
-
-        ResponseEntity<?> employeeResponse = employeeApiCliente.findById(payrollRecord.getEmployeeId());
-        if (!employeeResponse.getStatusCode().is2xxSuccessful()) {
-            payrollRecord.setErrorMessage("Erro ao buscar os dados do colaborador");
-            payrollRecord.setStatus(PayrollRecordStatus.FAILED);
-        }
-        EmployeeResponse employee = (EmployeeResponse) timeEntriesResponse.getBody();
-
-
-
-
     }
 
 }

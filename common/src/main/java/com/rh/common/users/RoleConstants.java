@@ -1,4 +1,4 @@
-package com.rh.user.models;
+package com.rh.common.users;
 
 public class RoleConstants {
 
