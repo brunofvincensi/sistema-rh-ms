@@ -2,10 +2,7 @@ package com.rh.employee.clients.user;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "user-service")
 public interface UserApiClient {
@@ -16,4 +13,6 @@ public interface UserApiClient {
     @PutMapping("/users/employee/{id}")
     ResponseEntity<Void> updateByIdEmployee(@PathVariable("id") String userId, @RequestBody UserUpdateRequest userRequest);
 
+    @DeleteMapping("/users/employee/{id}")
+    ResponseEntity<Void> deleteUser(@PathVariable("id") String employeeId);
 }

@@ -43,7 +43,6 @@ public class SecurityConfig {
                         // Time Clock
                         .pathMatchers(HttpMethod.POST, "/api/time-entry/time-entries/record").hasAnyRole(COLABORADOR, ANALISTA_RH)
                         .pathMatchers(HttpMethod.GET, "/api/time-entry/time-entries/daily/me").hasAnyRole(COLABORADOR, ANALISTA_RH)
-                        .pathMatchers(HttpMethod.PUT, "/api/employee/employees/{id}").hasAnyRole(COLABORADOR, ANALISTA_RH)
 
                         .pathMatchers(HttpMethod.GET, "/api/time-entry/time-entries/daily").hasAnyRole(ANALISTA_RH)
                         .pathMatchers(HttpMethod.GET, "/api/time-entry/time-entries/monthly").hasAnyRole(ANALISTA_RH)

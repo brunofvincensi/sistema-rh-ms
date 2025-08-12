@@ -20,22 +20,27 @@ public class GatewayConfig {
         return builder.routes()
                 .route("user-service", r -> r
                         .path("/api/user/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8081"))
 
                 .route("employee-service", r -> r
                         .path("/api/employee/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8082"))
 
-                .route("time-clock-service", r -> r
-                        .path("/api/time-clock/**")
+                .route("time-entry-service", r -> r
+                        .path("/api/time-entry/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8083"))
 
                 .route("payroll-service", r -> r
                         .path("/api/payroll/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8084"))
 
                 .route("email-service", r -> r
                         .path("/api/email/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8085"))
 
                 .build();

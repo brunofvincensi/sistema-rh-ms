@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -24,6 +25,12 @@ public class UserController {
     public ResponseEntity<Void> create(@RequestBody @Valid UserRequest userRequest) {
         userService.create(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/users/employee/{id}")
+    ResponseEntity<Void> deleteUser(@PathVariable("id") String employeeId) {
+        userService.deleteByEmployeeId(UUID.fromString(employeeId));
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

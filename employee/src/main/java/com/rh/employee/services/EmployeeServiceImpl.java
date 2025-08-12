@@ -85,6 +85,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (FeignException e) {
             String message = e.contentUTF8(); // corpo da resposta com a mensagem de erro
             throw new BusinessException("Falha ao criar usuário: " + message);
+        } catch (Throwable e) { // Se houver um erro inesperado, remove o usuário para garantir
+            userApiClient.deleteUser(employee.getId().toString());
+            throw e;
         }
     }
 

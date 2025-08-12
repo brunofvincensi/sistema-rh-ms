@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
         internalSave(user);
     }
 
+    @Override
+    public void deleteByEmployeeId(UUID uuid) {
+        userRepository.deleteByEmployeeId(uuid);
+    }
+
     private static String encodePassword(String password) {
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         return bcrypt.encode(password);

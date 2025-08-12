@@ -45,7 +45,7 @@ public class PermissionServiceImpl implements PermissionService {
     private Mono<UserInfo> findUserPermission(String userId) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://api/user/users/" + userId)
+                .uri("http://localhost:8081/users/" + userId)
                 .retrieve()
                 .bodyToMono(UserInfo.class)
                 .onErrorReturn(new UserInfo());
