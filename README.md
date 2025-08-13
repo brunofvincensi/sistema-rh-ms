@@ -61,6 +61,7 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 ### Payroll Service
 
 - Inicia cálculo de folha de pagamento de forma assíncrona, publicando evento no RabbitMQ.
+- Como é assincrona, a requisição retorna imediatamente, apenas com a entidade de movimentação do processamento da folha salva, retornando o id dela para posterior consulta com o status code 202, pois ainda não está concluído
 - O próprio serviço consome a fila e processa a folha.
 - Faz requisições para a api de colaborador e marcação para ter os dados de "base de cálculo".
 - Armazena histórico de execuções com status, usuário solicitante, data de início e fim, para auditoria e consulta.
