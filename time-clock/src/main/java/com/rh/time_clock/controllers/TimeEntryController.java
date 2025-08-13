@@ -81,7 +81,7 @@ public class TimeEntryController {
     }
 
     @GetMapping("/monthly")
-    public ResponseEntity<?> findByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
+    public ResponseEntity<List<TimeEntryResponse>> findByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
                                                 @RequestParam @NotNull Integer month,
                                                 @RequestParam @NotNull Integer year) {
         UUID employeeId = UUID.fromString(employeeIdParam);

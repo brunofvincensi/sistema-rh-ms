@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface EmployeeService {
 
-    void admit(EmployeeRequest employeeRequest);
+    EmployeeResponse admit(EmployeeRequest employeeRequest);
 
-    void update(UUID id, EmployeeUpdateRequest employeeRequest);
+    EmployeeResponse update(UUID id, EmployeeUpdateRequest employeeRequest);
 
     EmployeeResponse findById(UUID employeeId);
 

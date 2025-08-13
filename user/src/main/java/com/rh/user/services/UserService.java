@@ -9,13 +9,13 @@ import java.util.UUID;
 
 public interface UserService {
 
-    void create(UserRequest userRequest);
+    UserResponse create(UserRequest userRequest);
 
     void deleteByEmployeeId(UUID uuid);
 
-    void update(UUID userId, UserUpdateRequest userRequest);
+    UserResponse update(UUID userId, UserUpdateRequest userRequest);
 
     UserResponse findById(UUID userId);
 
-    void updateByEmployeeId(UUID uuid, @Valid UserUpdateRequest userRequest);
+    UserResponse updateByEmployeeId(UUID uuid, @Valid UserUpdateRequest userRequest);
 }

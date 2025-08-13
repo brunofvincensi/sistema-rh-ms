@@ -2,7 +2,6 @@ package com.rh.time_clock.domain.models;
 
 import com.rh.time_clock.domain.enums.TimeEntryType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -22,7 +21,7 @@ public class TimeEntryEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank
+    @NotNull
     @Column(name = "employee_id", nullable = false)
     private UUID employeeId;
 

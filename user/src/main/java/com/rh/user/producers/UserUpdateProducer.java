@@ -18,7 +18,7 @@ public class UserUpdateProducer {
     private String routingKey;
 
     public void publishUserUpdate(UserEntity user) {
-        var userUpdatedEvent = new UserUpdatedEvent(user.getId(),user.getEmployeeId(), user.getCpf(), user.getRole());
+        var userUpdatedEvent = new UserUpdatedEvent(user.getId(), user.getEmployeeId(), user.getCpf(), user.getRole());
         rabbitTemplate.convertAndSend(routingKey, userUpdatedEvent);
     }
 

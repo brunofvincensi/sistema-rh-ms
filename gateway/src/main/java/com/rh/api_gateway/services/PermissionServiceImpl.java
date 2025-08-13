@@ -12,21 +12,23 @@ import java.time.Duration;
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
-    private ReactiveRedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    private WebClient.Builder webClientBuilder;
-
     private static final String CACHE_PREFIX = "user_permission:";
     // Timeout do cache
-    private static final Duration CACHE_TTL = Duration.ofMinutes(30);
+    private static final Duration CACHE_TIMEOUT = Duration.ofMinutes(30);
+
+    private final ReactiveRedisTemplate<String, Object> redisTemplate;
+    private final WebClient.Builder webClientBuilder;
+
+    public PermissionServiceImpl(ReactiveRedisTemplate<String, Object> redisTemplate, WebClient.Builder webClientBuilder) {
+        this.redisTemplate = redisTemplate;
+        this.webClientBuilder = webClientBuilder;
+    }
 
     @Override
     public Mono<UserInfo> getUserPermission(String userId) {
         String cacheKey = CACHE_PREFIX + userId;
 
-        // Primeiro, tentar buscar do cache Redis
+        // Primeiro, tentar buscar do cache do Redis
         return redisTemplate.opsForValue()
                 .get(cacheKey)
                 .cast(UserInfo.class)
@@ -36,7 +38,7 @@ public class PermissionServiceImpl implements PermissionService {
                                 .flatMap(userInfo ->
                                         // Salvar no cache e retornar
                                         redisTemplate.opsForValue()
-                                                .set(cacheKey, userInfo, CACHE_TTL)
+                                                .set(cacheKey, userInfo, CACHE_TIMEOUT)
                                                 .thenReturn(userInfo)
                                 )
                 );

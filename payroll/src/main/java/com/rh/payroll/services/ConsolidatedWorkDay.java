@@ -36,9 +36,9 @@ public class ConsolidatedWorkDay {
         LocalTime checkIn = null;
 
         for (TimeEntryResponse timeEntry : timeEntries) {
-            if (timeEntry.getType() == 0) {
+            if (timeEntry.getType().equals("IN")) {
                 checkIn = timeEntry.getTime();
-            } else if (timeEntry.getType() == 1 && checkIn != null) {
+            } else if (timeEntry.getType().equals("OUT") && checkIn != null) {
                 Duration duration = Duration.between(checkIn, timeEntry.getTime());
                 BigDecimal hours = new BigDecimal(duration.toMinutes())
                         .divide(new BigDecimal(60), 4, RoundingMode.HALF_UP);

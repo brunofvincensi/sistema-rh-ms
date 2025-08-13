@@ -1,4 +1,4 @@
-package com.rh.api_gateway.config.rabbitMQ;
+package com.rh.user.config.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;

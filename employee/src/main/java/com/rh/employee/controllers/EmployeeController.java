@@ -27,14 +27,14 @@ public class EmployeeController {
 
     @PostMapping("/admit")
     public ResponseEntity<?> admit(@RequestBody @Valid EmployeeRequest employeeRequest) {
-        employeeService.admit(employeeRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        EmployeeResponse response = employeeService.admit(employeeRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody @Valid EmployeeUpdateRequest employeeRequest) {
-        employeeService.update(UUID.fromString(id), employeeRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        EmployeeResponse response = employeeService.update(UUID.fromString(id), employeeRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")

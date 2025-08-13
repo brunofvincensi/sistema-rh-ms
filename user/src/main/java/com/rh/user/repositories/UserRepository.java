@@ -10,9 +10,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID>  {
 
-    boolean existsByEmployeeId(UUID uuid);
-
-    boolean existsByCpf(String cpf);
+    boolean existsByCpfAndIdNot(String cpf, UUID id);
 
     Optional<UserEntity> findByEmployeeId(UUID employeeId);
 

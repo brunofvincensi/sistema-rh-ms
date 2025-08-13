@@ -29,7 +29,7 @@ public class EmployeeEntity {
     private String cpf;
 
     @Email
-    @Column(name = "ds_email", nullable = false, unique = true)
+    @Column(name = "ds_email", nullable = false)
     private String email;
 
     @NotNull

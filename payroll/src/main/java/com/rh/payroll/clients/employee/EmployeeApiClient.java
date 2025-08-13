@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface EmployeeApiClient {
 
     @GetMapping("/employees/{id}")
-    ResponseEntity<?> findById(@PathVariable("id") String employeeId);
+    ResponseEntity<EmployeeResponse> findById(@PathVariable("id") String employeeId);
 
 }

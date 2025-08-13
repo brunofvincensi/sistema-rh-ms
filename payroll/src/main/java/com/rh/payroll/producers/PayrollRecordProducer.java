@@ -5,6 +5,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class PayrollRecordProducer {
 
@@ -17,8 +19,9 @@ public class PayrollRecordProducer {
     @Value(value = "${broker.queue.payroll-record.name}")
     private String routingKey;
 
-    public void publishRecord(PayrollRecordEntity payrollRecord) {
-        rabbitTemplate.convertAndSend(routingKey, payrollRecord.getId());
+    public void publishRecord(PayrollRecordEntity payrollRecord, UUID actionEmployeeId) {
+        PayrollRecordEvent event = new PayrollRecordEvent(payrollRecord.getId(), actionEmployeeId);
+        rabbitTemplate.convertAndSend(routingKey, event);
     }
 
 }

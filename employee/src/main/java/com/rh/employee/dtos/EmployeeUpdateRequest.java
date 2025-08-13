@@ -9,8 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record EmployeeUpdateRequest(@NotNull UUID id,
-                                    @NotBlank String name,
+public record EmployeeUpdateRequest(@NotBlank String name,
                                     @NotBlank @CPF String cpf,
                                     @NotBlank @Email String email,
                                     @NotNull LocalDate birthDate,

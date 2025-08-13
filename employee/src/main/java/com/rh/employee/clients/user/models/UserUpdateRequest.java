@@ -1,4 +1,4 @@
-package com.rh.employee.clients.user;
+package com.rh.employee.clients.user.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

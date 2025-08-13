@@ -13,6 +13,6 @@ public class TimeEntryResponse {
     private UUID employeeId;
     private LocalDate date;
     private LocalTime time;
-    private Integer type;
-
+    private String type;
+    private String observation;
 }

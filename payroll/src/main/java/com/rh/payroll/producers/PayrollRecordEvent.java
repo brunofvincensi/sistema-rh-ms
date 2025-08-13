@@ -10,8 +10,6 @@ import java.util.UUID;
 public class PayrollRecordEvent {
 
     private UUID id;
-    private UUID employeeId;
-    private String cpf;
-    private String role;
+    private UUID actionEmployeeId;
 
 }

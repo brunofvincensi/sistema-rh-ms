@@ -27,23 +27,12 @@ public class AuthenticationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-//        if ()
-//        // Permitir rotas públicas
-//        if (path.contains("/auth/") || path.contains("/eureka")) {
-//            return chain.filter(exchange);
-//        }
-
-        // Simular header de usuário conforme especificação
+        // Header deve possuir o id do usuário
         String usuarioHeader = exchange.getRequest().getHeaders().getFirst(HeaderConstants.USER_ID);
 
         if (usuarioHeader == null || usuarioHeader.isBlank()) {
             return chain.filter(exchange);
         }
-
-//        if (usuarioHeader == null || usuarioHeader.trim().isEmpty()) {
-//            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
-//            return exchange.getResponse().setComplete();
-//        }
 
         // Buscar dados do usuário no cache/serviço
         return permissionService.getUserPermission(usuarioHeader)

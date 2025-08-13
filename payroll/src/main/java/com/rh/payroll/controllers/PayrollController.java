@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController("/payrolls")
+@RestController
+@RequestMapping("/payrolls")
 public class PayrollController {
 
     private final PayrollRecordService payrollService;
@@ -25,9 +26,11 @@ public class PayrollController {
         this.httpServletRequest = httpServletRequest;
     }
 
-    @PostMapping
+    @PostMapping("/record")
     public ResponseEntity<?> record(@RequestBody @Valid PayrollRecordRequest payrollRecordRequest) {
-        UUID recordId = payrollService.record(payrollRecordRequest);
+        String userId = httpServletRequest.getHeader(HeaderConstants.USER_ID);
+        String employeeId = httpServletRequest.getHeader(HeaderConstants.EMPLOYEE_ID);
+        UUID recordId = payrollService.record(payrollRecordRequest, UUID.fromString(userId), UUID.fromString(employeeId));
         return ResponseEntity.accepted().body(new PayrollRecordResponse(recordId));
     }
 

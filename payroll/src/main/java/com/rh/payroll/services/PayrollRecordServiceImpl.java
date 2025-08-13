@@ -28,7 +28,7 @@ public class PayrollRecordServiceImpl implements PayrollRecordService {
     }
 
     @Override
-    public UUID record(PayrollRecordRequest payrollRecordRequest) {
+    public UUID record(PayrollRecordRequest payrollRecordRequest, UUID actionUserId, UUID actionEmployeeId) {
         if (payrollRecordRequest == null) {
             return null;
         }
@@ -48,21 +48,23 @@ public class PayrollRecordServiceImpl implements PayrollRecordService {
             return entity.getId();
         }
 
-        PayrollRecordEntity entity = newPayrollRecord(payrollRecordRequest);
+        PayrollRecordEntity entity = newPayrollRecord(payrollRecordRequest, actionUserId);
 
         entity = payrollRecordRepository.save(entity);
 
-        payrollRecordProducer.publishRecord(entity);
+        payrollRecordProducer.publishRecord(entity, actionEmployeeId);
 
         return entity.getId();
     }
 
-    private static PayrollRecordEntity newPayrollRecord(PayrollRecordRequest payrollRecordRequest) {
+    private static PayrollRecordEntity newPayrollRecord(PayrollRecordRequest payrollRecordRequest, UUID actionUserId) {
         PayrollRecordEntity entity = new PayrollRecordEntity();
+        entity.setEmployeeId(payrollRecordRequest.employeeId());
         entity.setCreatedAt(LocalDate.now());
         entity.setMonth(payrollRecordRequest.month());
         entity.setYear(payrollRecordRequest.year());
         entity.setStatus(PayrollRecordStatus.PROCESSING);
+        entity.setActionUserId(actionUserId);
         return entity;
     }
 

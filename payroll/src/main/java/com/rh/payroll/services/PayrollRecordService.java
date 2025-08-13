@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface PayrollRecordService {
 
-    UUID record(PayrollRecordRequest payrollRecordRequest);
+    UUID record(PayrollRecordRequest payrollRecordRequest, UUID actionUserId, UUID actionEmployeeId);
 
     PayrollRecordInfoResponse findById(UUID id);
 

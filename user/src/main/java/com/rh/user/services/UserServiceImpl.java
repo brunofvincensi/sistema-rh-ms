@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(UserRequest userRequest) {
+    public UserResponse create(UserRequest userRequest) {
         if (userRequest == null) {
-            return;
+            return null;
         }
 
         var user = new UserEntity();
@@ -39,7 +39,9 @@ public class UserServiceImpl implements UserService {
         String passwordEncoded = encodePassword(userRequest.password());
         user.setPassword(passwordEncoded);
 
-        internalSave(user);
+        user = internalSave(user);
+
+        return new UserResponse(user);
     }
 
     @Override
@@ -53,25 +55,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UUID userId, UserUpdateRequest userRequest) {
+    public UserResponse update(UUID userId, UserUpdateRequest userRequest) {
         if (userRequest == null || userId == null) {
-            return;
+            return null;
         }
         var user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        updateUser(userRequest, user);
+        return updateUser(userRequest, user);
     }
-
 
     @Override
-    public void updateByEmployeeId(UUID employeeId, UserUpdateRequest userRequest) {
+    public UserResponse updateByEmployeeId(UUID employeeId, UserUpdateRequest userRequest) {
         if (userRequest == null || employeeId == null) {
-            return;
+            return null;
         }
         UserEntity user = userRepository.findByEmployeeId(employeeId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        updateUser(userRequest, user);
+        return updateUser(userRequest, user);
     }
 
-    private void updateUser(UserUpdateRequest userRequest, UserEntity user) {
+    private UserResponse updateUser(UserUpdateRequest userRequest, UserEntity user) {
         user.setCpf(userRequest.cpf());
         // Apenas atualiza a role foi informada
         if (userRequest.role() != null) {
@@ -82,12 +83,14 @@ public class UserServiceImpl implements UserService {
 
         // Depois de alterar com sucesso, publica na fila a alteração
         userUpdateProducer.publishUserUpdate(userUpdated);
+
+        return new UserResponse(userUpdated);
     }
 
     @Override
     public UserResponse findById(UUID userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        return new UserResponse(user.getId(), user.getEmployeeId(),user.getRole());
+        return new UserResponse(user);
     }
 
     private UserEntity internalSave(UserEntity user) {
@@ -99,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateUniqueFields(UserEntity user)  {
-        if (userRepository.existsByCpf(user.getCpf())) {
+        if (userRepository.existsByCpfAndIdNot(user.getCpf(), user.getId())) {
             throw new BusinessException("CPF já cadastrado");
         }
     }

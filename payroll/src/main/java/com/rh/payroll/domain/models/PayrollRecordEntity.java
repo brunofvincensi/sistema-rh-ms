@@ -24,6 +24,13 @@ public class PayrollRecordEntity {
     @Column(name = "employee_id", nullable = false)
     private UUID employeeId;
 
+    /*
+     * Usuário que iniciou o cálculo
+     */
+    @NotNull
+    @Column(name = "action_user_id", nullable = false)
+    private UUID actionUserId;
+
     @NotNull
     @Column(name = "nr_month", nullable = false)
     private Integer month;

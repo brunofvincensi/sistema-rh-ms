@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "time-clock-service")
+import java.util.List;
+
+@FeignClient(name = "time-entry-service")
 public interface TimeClockApiClient {
 
-    @GetMapping("/time-entries")
-    ResponseEntity<?> findTimeEntriesByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
-                                                           @RequestParam @NotNull Integer month,
-                                                           @RequestParam @NotNull Integer year);
+    @GetMapping("/time-entries/monthly")
+    ResponseEntity<List<TimeEntryResponse>> findByMonthAndYear(@RequestParam @NotBlank String employeeIdParam,
+                                                                          @RequestParam @NotNull Integer month,
+                                                                          @RequestParam @NotNull Integer year);
 
 }

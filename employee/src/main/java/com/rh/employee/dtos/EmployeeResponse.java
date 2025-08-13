@@ -1,5 +1,7 @@
 package com.rh.employee.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rh.employee.clients.user.models.UserResponse;
 import com.rh.employee.models.EmployeeEntity;
 import lombok.Data;
 
@@ -7,7 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EmployeeResponse {
 
     private UUID id;
@@ -18,6 +22,9 @@ public class EmployeeResponse {
     private LocalDate admissionDate;
     private BigDecimal salary;
     private WorkScheduleResponse workSchedule;
+
+    // Para retornar quando criar/alterar o colaborador
+    private UserResponse user;
 
     public EmployeeResponse(EmployeeEntity employee) {
         this.id = employee.getId();

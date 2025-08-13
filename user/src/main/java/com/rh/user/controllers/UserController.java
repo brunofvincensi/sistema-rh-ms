@@ -22,9 +22,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid UserRequest userRequest) {
-        userService.create(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest userRequest) {
+        UserResponse userResponse = userService.create(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @DeleteMapping("/users/employee/{id}")
@@ -34,15 +34,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") String userId, @RequestBody @Valid UserUpdateRequest userRequest) {
-        userService.update(UUID.fromString(userId), userRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserResponse> update(@PathVariable("id") String userId, @RequestBody @Valid UserUpdateRequest userRequest) {
+        UserResponse userResponse = userService.update(UUID.fromString(userId), userRequest);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PutMapping("/employee/{id}")
-    public ResponseEntity<Void> updateByIdEmployee(@PathVariable("id") String employeeId, @RequestBody @Valid UserUpdateRequest userRequest) {
-        userService.updateByEmployeeId(UUID.fromString(employeeId), userRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserResponse> updateByIdEmployee(@PathVariable("id") String employeeId, @RequestBody @Valid UserUpdateRequest userRequest) {
+        UserResponse userResponse = userService.updateByEmployeeId(UUID.fromString(employeeId), userRequest);
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/{id}")

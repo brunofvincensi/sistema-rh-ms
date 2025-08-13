@@ -1,5 +1,6 @@
 package com.rh.api_gateway.consumers;
 
+import com.rh.api_gateway.dtos.UserInfo;
 import com.rh.api_gateway.services.PermissionService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,8 @@ public class PermissionCacheInvalidator {
     }
 
     @RabbitListener(queues = "${broker.queue.user-update.name}")
-    public void invalidateCache(String userId) {
-        permissionService.invalidateCache(userId);
+    public void invalidateCache(UserInfo userInfo) {
+        permissionService.invalidateCache(userInfo.getId().toString());
     }
 
 }

@@ -3,8 +3,9 @@ package com.rh.employee.services;
 import com.rh.common.exceptions.BusinessException;
 import com.rh.common.exceptions.ResourceNotFoundException;
 import com.rh.employee.clients.user.UserApiClient;
-import com.rh.employee.clients.user.UserRequest;
-import com.rh.employee.clients.user.UserUpdateRequest;
+import com.rh.employee.clients.user.models.UserRequest;
+import com.rh.employee.clients.user.models.UserResponse;
+import com.rh.employee.clients.user.models.UserUpdateRequest;
 import com.rh.employee.dtos.EmployeeRequest;
 import com.rh.employee.dtos.EmployeeResponse;
 import com.rh.employee.dtos.EmployeeUpdateRequest;
@@ -12,6 +13,7 @@ import com.rh.employee.models.EmployeeEntity;
 import com.rh.employee.repositories.EmployeeRepository;
 import com.rh.employee.repositories.WorkScheduleRepository;
 import feign.FeignException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +36,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public void admit(EmployeeRequest request) {
+    public EmployeeResponse admit(EmployeeRequest request) {
         EmployeeEntity employee = newEmployee(request);
         employee = internalSave(employee);
 
-        createUser(request, employee);
+        UserResponse user = createUser(request, employee);
+
+        EmployeeResponse employeeResponse = new EmployeeResponse(employee);
+        employeeResponse.setUser(user);
+
+        return employeeResponse;
     }
 
     private EmployeeEntity newEmployee(EmployeeRequest request) {
@@ -54,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void update(UUID id, EmployeeUpdateRequest request) {
+    public EmployeeResponse update(UUID id, EmployeeUpdateRequest request) {
         EmployeeEntity employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado"));
 
         employee.setName(request.name());
@@ -64,7 +71,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setSalary(request.salary());
         employee.setWorkSchedule(workScheduleRepository.findById(request.workScheduleId()).orElse(null));
 
+        UserResponse userResponse = updateUser(request, employee);
+
         employee = internalSave(employee);
+
+        EmployeeResponse employeeResponse = new EmployeeResponse(employee);
+        employeeResponse.setUser(userResponse);
+
+        return employeeResponse;
     }
 
     @Override
@@ -78,10 +92,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll().stream().map(EmployeeResponse::new).toList();
     }
 
-    private void createUser(EmployeeRequest request, EmployeeEntity employee) {
+    private UserResponse createUser(EmployeeRequest request, EmployeeEntity employee) {
         UserRequest userRequest = new UserRequest(employee.getId(), employee.getCpf(), request.password(), request.role());
         try {
-            userApiClient.createUser(userRequest);
+            ResponseEntity<UserResponse> user = userApiClient.createUser(userRequest);
+            return user == null ? null : user.getBody();
         } catch (FeignException e) {
             String message = e.contentUTF8(); // corpo da resposta com a mensagem de erro
             throw new BusinessException("Falha ao criar usuário: " + message);
@@ -91,10 +106,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    private void updateUser(EmployeeUpdateRequest request, EmployeeEntity employee) {
+    private UserResponse updateUser(EmployeeUpdateRequest request, EmployeeEntity employee) {
         UserUpdateRequest userRequest = new UserUpdateRequest(employee.getCpf(), request.role());
         try {
-            userApiClient.updateByIdEmployee(employee.getId().toString(), userRequest);
+            ResponseEntity<UserResponse> user = userApiClient.updateByEmployeeId(employee.getId().toString(), userRequest);
+            return user == null ? null : user.getBody();
         } catch (FeignException e) {
             String message = e.contentUTF8(); // corpo da resposta com a mensagem de erro
             throw new BusinessException("Falha ao alterar usuário: " + message);
@@ -107,11 +123,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void validaUniqueFields(EmployeeEntity employee) {
-        if (employeeRepository.existsByCpf(employee.getCpf())) {
+        if (employeeRepository.existsByCpfAndIdNot(employee.getCpf(), employee.getId())) {
             throw new BusinessException("CPF já cadastrado");
-        }
-        if (employeeRepository.existsByEmail(employee.getEmail())) {
-            throw new BusinessException("Email já cadastrado");
         }
     }
 
