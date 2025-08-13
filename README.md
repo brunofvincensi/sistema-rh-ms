@@ -41,9 +41,10 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 - Implementado a requisição de cadastrar Escala de Trabalho separado para não ter que repetir a cada novo colaborador e duplicar varias informações na base.
 - Implementado a requisição de admissão de colaborador, na qual possue as informações do colaborador, informações para criação de usuário e o id que referência a Escala de Trabalho pré-cadastrada.
 - A criação de usuário é feita de forma síncrona (salva colaborador e chama User Service); se houver erro, a transação é abortada.
-- **Ponto negativo**: pode haver inconsistência se ocorrer uma falha inesperada após criar o usuário, mas antes de salvar o colaborador.
-- **Alternativa**: realizar a criação de usuário de forma assíncrona, com mecanismo de compensação (remoção de colaborador em caso de falha).
-
+- **Ponto negativo1**: pode haver inconsistência se ocorrer uma falha inesperada após criar o usuário, mas antes de salvar o colaborador.
+- **Alternativa1**: realizar a criação de usuário de forma assíncrona, com mecanismo de compensação (remoção de colaborador em caso de falha).
+- **Ponto negativo2**: os serviços filhos não irão controlar autenticação e autorização
+- **Alternativa2**: manter apenas a api gateway publica e os serviços em uma network privada para não acessa-los diretemente.
 ### Time Entry Service
 
 - Cadastro de ponto por data/hora atual para colaboradores.
