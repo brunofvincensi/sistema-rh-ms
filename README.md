@@ -74,3 +74,8 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 - Consome eventos de solicitação de envio de e-mails.
 - Responsável por efetuar a entrega das notificações.
 - **Ponto positivo**: desacopla a responsabilidade de envio, permitindo que outros serviços apenas disparem eventos.
+
+### Common
+
+- Biblioteca comum, compartilhada entre os serviços
+- Compartilha dados das roles, constates das informações que vão no header e exceções personalizadas e controller handler padrão das exception
