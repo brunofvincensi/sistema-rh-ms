@@ -33,6 +33,7 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 - Serviço que centraliza as requisições de origem externa.
 - A validação das roles dos usuários foi feita nesse serviço, impedindo que as requisições fossem repassadas para os outros serviços caso a role não tenha autorização, fazendo com que centralize essas validações.
 - Implementado um cache com Redis das informações do usuário para não precisar consultar a role do usuário em toda requisição, além de passar algumas dessas informações do usuário no header da requisição.
+- Quando usuário é alterado é enviado um event pela api de usuário e consumida por este, para invalidar o cache do Redis
 - **Ponto negativo**: único ponto de entrada para todos os microserviços, se o Gateway falhar, todo o sistema fica inacessível. Talvez implementar várias instâncias desse serviço para contornar esse problema
 - **Sugestões de melhoria**: Implementar a autenticação com JWT ou Oauth2, hoje tem apenas a autorização (roles).
 
