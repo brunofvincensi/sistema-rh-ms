@@ -25,11 +25,8 @@ public class AuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        String path = exchange.getRequest().getURI().getPath();
-
         // Header deve possuir o id do usuário
         String usuarioHeader = exchange.getRequest().getHeaders().getFirst(HeaderConstants.USER_ID);
-
         if (usuarioHeader == null || usuarioHeader.isBlank()) {
             return chain.filter(exchange);
         }

@@ -16,7 +16,8 @@ public class PermissionCacheInvalidator {
 
     @RabbitListener(queues = "${broker.queue.user-update.name}")
     public void invalidateCache(UserInfo userInfo) {
-        permissionService.invalidateCache(userInfo.getId().toString());
+        permissionService.invalidateCache(userInfo.getId().toString())
+                .subscribe();
     }
 
 }
