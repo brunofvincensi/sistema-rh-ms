@@ -46,12 +46,14 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 - **Alternativa1**: realizar a criação de usuário de forma assíncrona, com mecanismo de compensação (remoção de colaborador em caso de falha).
 - **Ponto negativo2**: os serviços filhos não irão controlar autenticação e autorização
 - **Alternativa2**: manter apenas a api gateway publica e os serviços em uma network privada para não acessa-los diretemente.
+
 ### Time Entry Service
 
 - Cadastro de ponto por data/hora atual para colaboradores.
 - Funcionalidades de edição e consulta.
 - Criado índice composto por colaborador e data, devido ao alto volume esperado e ao uso frequente desses campos em filtros.
 - **Ponto positivo**: otimização de consultas em tabelas grandes desde o início do projeto.
+- **Sugestões futuras**: Se a tabela se tornar extremamente grande, pode ser criada uma tabela auxiliar com menos dados, talvez salvando apenas o colaborador e mês e sendo uma fk para a tabela principal, para facilitar filtros iniciais, ajudando na hora de processar as folhas de pagamento
 
 ### User Service
 
