@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface TimeEntryService {
 
-    void record(TimeEntryRequest request);
+    void record(TimeEntryRequest request, UUID employeeId);
 
     void updateRecord(TimeEntryEntity timeEntry, TimeEntryUpdateRequest request);
 

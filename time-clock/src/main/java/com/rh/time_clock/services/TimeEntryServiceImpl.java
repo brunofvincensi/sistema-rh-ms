@@ -27,10 +27,10 @@ public class TimeEntryServiceImpl implements TimeEntryService {
     }
 
     @Override
-    public void record(TimeEntryRequest request) {
+    public void record(TimeEntryRequest request, UUID employeeId) {
         TimeEntryEntity timeEntry = new TimeEntryEntity();
 
-        timeEntry.setEmployeeId(request.employeeId());
+        timeEntry.setEmployeeId(employeeId);
         timeEntry.setObservation(request.observation());
         timeEntry.setDate(LocalDate.now());
         timeEntry.setTime(LocalTime.now());
