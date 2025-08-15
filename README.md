@@ -84,3 +84,5 @@ A estratégia que adotei foi a de que cada microserviço possui sua própria bas
 
 - Biblioteca comum, compartilhada entre os serviços
 - Compartilha dados das roles, constates das informações que vão no header e exceções personalizadas e controller handler padrão das exception
+
+## Project Diagram Link: https://lucid.app/lucidchart/4f39c075-11e3-4779-96b1-34c879567a57/edit?viewport_loc=-1553%2C429%2C4315%2C2129%2C0_0&invitationId=inv_ec149fa5-b2d8-448e-8f10-0de1caea458b
